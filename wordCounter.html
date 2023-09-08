@@ -1,0 +1,23 @@
+<span class="meta" id="word_count">Word Count: </span>
+<script>
+    function reg(web) {
+        let quote = /[\u4E00-\u9FA5]/g;
+        let zh_chr = web.match(quote);
+        let quote2 = /[a-zA-Z0-9]+/g;
+        let other_chr = web.match(quote2);
+        return {
+            zh: zh_chr ? zh_chr.join('') : [],
+            other: other_chr ? other_chr : []
+        };
+    }
+    let web = '{{- page.content | strip_html | escape_once | compact | strip  -}}';
+    web = web.replace(/\/n/g, ' ');
+    // 去除文献
+    bib_pattern = /[A-Z\u4e00-\u9fa5][\+a-zA-Z0-9\u4e00-\u9fa5, &:：；;.…!！'‘’"“”()（）—–-]+https?:\/\/[^ ]*/g;
+    // 去除链接
+    link_pattern = /https?:\/\/[^ ]*/g;
+    web = web.replace(bib_pattern, ' ');
+    web = web.replace(link_pattern, ' ');
+    let my_web = reg(web);
+    document.querySelector('#word_count').innerHTML += my_web.other.length + my_web.zh.length;
+</script>
